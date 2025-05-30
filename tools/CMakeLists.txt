@@ -54,4 +54,19 @@ if(TOOLS_USE_ARROW)
   target_link_libraries(ice_make iceberg-tools ${CMAKE_DL_LIBS})
   set_target_properties(ice_make PROPERTIES LINK_FLAGS_RELEASE -s)
   set_target_properties(ice_make PROPERTIES LINK_FLAGS_RELWITHDEBINFO -s)
+
+  set(SYNCICE_SRC
+    syncice.cpp
+    copy_modified.cpp
+    replace_func.cpp
+    hashsum.cpp
+    compaction_streams.cpp
+  )
+  add_executable(syncice ${SYNCICE_SRC})
+  target_include_directories(syncice PUBLIC ${PROJECT_SOURCE_DIR} ${ArrowHouse_SOURCE_DIR} ${ICEBERG_SOURCE_DIR})
+  target_link_libraries(syncice PUBLIC _hivemetastore _thrift
+    iceberg _rapidjson _avrocpp _boost_iostreams _hivemetastore absl::flags absl::flags_parse
+    arrowhouse DataStreams ETLDataStreams Arrow::arrow_static Parquet::parquet_static iceberg-tools)
+  set_target_properties(syncice PROPERTIES LINK_FLAGS_RELEASE -s)
+  set_target_properties(syncice PROPERTIES LINK_FLAGS_RELWITHDEBINFO -s)
 endif()
